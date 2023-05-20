@@ -129,7 +129,7 @@ def enhance_salesforce_report(df: pd.DataFrame) -> pd.DataFrame:
 
     df['Furthest Stage'] = df.apply(get_furthest_stage, axis=1)
 
-    df['Channel'] = df['Channel'].replace('EMEA', 'EMEA Reseller')
+    df['Channel'] = df['Channel'].replace({'EMEA': 'EMEA Reseller', 'EMEA Southern & Central Enterprise': 'EMEA Southern Enterprise')   
 
     def update_channel_and_pod(row: pd.Series) -> Tuple[str, str]:
         """Update channel and pod information.
@@ -299,8 +299,10 @@ def app():
         unique_pods = st.session_state.data['Pod'].unique().tolist()
         unique_account_types = st.session_state.data['Account Type'].unique().tolist()
         unique_opportunity_statuses = st.session_state.data['Opportunity Status'].unique().tolist()
+        
+        default_channels = ['NA Enterprise', 'NA Mid-Market', 'EMEA Northern Enterprise', 'EMEA Central Enterprise', 'EMEA Southern Enterprise', 'EMEA Northern Mid-Market', 'EMEA Reseller']
 
-        selected_channels = st.sidebar.multiselect("Channel", unique_channels)
+        selected_channels = st.sidebar.multiselect("Channel", unique_channels, default=default_channels)
         selected_pods = st.sidebar.multiselect("Pod", unique_pods)
         selected_account_types = st.sidebar.multiselect("Account Type", unique_account_types)
         selected_opportunity_statuses = st.sidebar.multiselect("Opportunity Status", unique_opportunity_statuses)
