@@ -9,6 +9,7 @@ from builtins import KeyError
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from typing import Tuple, List, Union
+from pathlib import Path
 
 
 today = datetime.date.today()
