@@ -274,6 +274,9 @@ def append_df_to_gsheet(df, gsheet_url, tab_title, json_key='/Users/qpradere/Doc
 
 def app():
     st.header('State of Go-To-Market Resource Builder')
+    with st.expander("How to Use This"):
+        st.write(Path("README.md").read_text())
+    
     csv_file = st.file_uploader("Drag and Drop or Click to Upload", type=".csv", accept_multiple_files=False)
 
     if 'data' not in st.session_state:
