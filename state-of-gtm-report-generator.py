@@ -129,7 +129,7 @@ def enhance_salesforce_report(df: pd.DataFrame) -> pd.DataFrame:
 
     df['Furthest Stage'] = df.apply(get_furthest_stage, axis=1)
 
-    df['Channel'] = df['Channel'].replace({'EMEA': 'EMEA Reseller', 'EMEA Southern & Central Enterprise': 'EMEA Southern Enterprise')   
+    df['Channel'] = df['Channel'].replace({'EMEA': 'EMEA Reseller', 'EMEA Southern & Central Enterprise': 'EMEA Southern Enterprise'})   
 
     def update_channel_and_pod(row: pd.Series) -> Tuple[str, str]:
         """Update channel and pod information.
