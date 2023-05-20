@@ -8,7 +8,6 @@ from pandas import Timestamp
 from builtins import KeyError
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
 from typing import Tuple, List, Union
 
 
@@ -302,6 +301,11 @@ def app():
         
         default_channels = ['NA Enterprise', 'NA Mid-Market', 'EMEA Northern Enterprise', 'EMEA Central Enterprise', 'EMEA Southern Enterprise', 'EMEA Northern Mid-Market', 'EMEA Reseller']
 
+<<<<<<< Updated upstream
+=======
+        default_channels = ['NA Enterprise', 'NA Mid-Market', 'EMEA Northern Enterprise', 'EMEA Central Enterprise', 'EMEA Southern Enterprise', 'EMEA Northern Mid-Market', 'EMEA Reseller']
+
+>>>>>>> Stashed changes
         selected_channels = st.sidebar.multiselect("Channel", unique_channels, default=default_channels)
         selected_pods = st.sidebar.multiselect("Pod", unique_pods)
         selected_account_types = st.sidebar.multiselect("Account Type", unique_account_types)
