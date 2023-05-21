@@ -397,29 +397,32 @@ def app():
                         st.error(f"Error processing data. It appears the column {str(e)} is not present in your data.")
 
                     # Display the buttons across the page
+                    col1, col2 = st.columns(2)
                     pivot_csv_data = pivot_data.to_csv().encode('utf-8')
-                    st.download_button(
-                        label="Download Pivot as CSV",
-                        data=pivot_csv_data,
-                        file_name="pivot_table.csv",
-                        mime="text/csv",
-                    )
+                    with col1:
+                        st.download_button(
+                            label="Download Pivot as CSV",
+                            data=pivot_csv_data,
+                            file_name="pivot_table.csv",
+                            mime="text/csv",
+                        )
 
-                    if st.button('Upload Pivot to Google Sheets'):
-                        st.session_state.save_to_gsheet = True
+                    with col2:
+                        if st.button('Upload Pivot to Google Sheets'):
+                            st.session_state.save_to_gsheet = True
 
-                    if st.session_state.save_to_gsheet:
-                        tab_title = st.text_input('Enter the title for the new tab:', 'State of GTM Pivot')
-                        gsheet_url = st.text_input('Enter the URL of the Google Sheets document:')
+                        if st.session_state.save_to_gsheet:
+                            tab_title = st.text_input('Enter the title for the new tab:', 'State of GTM Pivot')
+                            gsheet_url = st.text_input('Enter the URL of the Google Sheets document:')
 
-                        if gsheet_url and tab_title:
-                            try:
-                                append_df_to_gsheet(pivot_data, gsheet_url, tab_title)
-                                st.success('Data successfully saved to Google Sheets')
-                                st.session_state.save_to_gsheet = False  # Reset the state after successful save
-                                st.session_state.go = False  # Reset the go state after successful save
-                            except Exception as e:
-                                st.error(f"Error saving data to Google Sheets: {str(e)}")
+                            if gsheet_url and tab_title:
+                                try:
+                                    append_df_to_gsheet(pivot_data, gsheet_url, tab_title)
+                                    st.success('Data successfully saved to Google Sheets')
+                                    st.session_state.save_to_gsheet = False  # Reset the state after successful save
+                                    st.session_state.go = False  # Reset the go state after successful save
+                                except Exception as e:
+                                    st.error(f"Error saving data to Google Sheets: {str(e)}")
 
         # Place this block after your if-else blocks for 'pivot_section_visible'
         if st.session_state.get('pivot_section_visible', False) and 'pivot_data' in st.session_state:
