@@ -423,12 +423,11 @@ def app():
                                     except Exception as e:
                                         st.error(f"Error saving data to Google Sheets: {str(e)}")
 
-                        # Display the dataframe after the buttons
-                        st.dataframe(pivot_data)
-
                     except KeyError as e:
                         st.error(f"Error processing data. It appears the column {str(e)} is not present in your data.")
 
+                    # Display the dataframe after the buttons
+                    st.dataframe(pivot_data)
 
 if __name__ == "__main__":
     app()
