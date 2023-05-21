@@ -388,6 +388,7 @@ def app():
 
                     start_date_pd = Timestamp(st.session_state.start_date)
                     end_date_pd = Timestamp(st.session_state.end_date)
+
                     try:
                         pivot_data = process_data(filtered_data, values, index, column, aggfunc, start_date_pd, end_date_pd)
 
@@ -422,11 +423,12 @@ def app():
                                     except Exception as e:
                                         st.error(f"Error saving data to Google Sheets: {str(e)}")
 
-                    # Display the dataframe after the buttons
-                    st.dataframe(pivot_data)
+                        # Display the dataframe after the buttons
+                        st.dataframe(pivot_data)
 
                     except KeyError as e:
                         st.error(f"Error processing data. It appears the column {str(e)} is not present in your data.")
+
 
 if __name__ == "__main__":
     app()
