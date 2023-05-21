@@ -116,10 +116,14 @@ def enhance_salesforce_report(df: pd.DataFrame) -> pd.DataFrame:
     df = update_dates(df, date_cols)
 
     df['Close Date - Month'] = df['Close Date'].dt.strftime('%B')
+    df['Date: Moved to Discovery - Month'] = df['Date: Moved to Discovery - Fiscal Quarter'].dt.strftime('%B')
+    df['Date: Moved to Validate - Month'] = df['Date: Moved to Validate - Fiscal Quarter'].dt.strftime('%B')
     df['Close Date - Fiscal Quarter'] = df['Close Date'].apply(fiscal_quarter)
-    df['Close Date - Fiscal Year'] = df['Close Date - Fiscal Quarter'].str[:6]
     df['Date: Moved to Discovery - Fiscal Quarter'] = df['Date: Moved to Discovery'].apply(fiscal_quarter)
     df['Date: Moved to Validate - Fiscal Quarter'] = df['Date: Moved to Validate'].apply(fiscal_quarter)
+    df['Close Date - Fiscal Year'] = df['Close Date - Fiscal Quarter'].str[:6]
+    df['Date: Moved to Discovery - Fiscal Year'] = df['Date: Moved to Discovery - Fiscal Quarter'].str[:6]
+    df['Date: Moved to Validate - Fiscal Year'] = df['Date: Moved to Validate - Fiscal Quarter'].str[:6]
 
     df['Total Opp Age'] = df.apply(lambda x: deal_duration(x['Date: Moved to Closed Won'], x['Date: Moved to Closed Lost'], x['Date: Moved to Dead'], original_date=x["Date: Moved to Discovery"]), axis=1)
     df['Total Opp Age'] = df['Total Opp Age'].dt.total_seconds() / (60 * 60 * 24)  # Convert to number of days
@@ -345,36 +349,38 @@ def app():
         if not st.session_state.get('pivot_section_visible', False):
             if button_placeholder.button('Create Trends Pivot Table'):
                 st.session_state.pivot_section_visible = True
-
+        
         if st.session_state.get('pivot_section_visible', False):
 
-                col1, col2, col3, col4 = st.columns(4)
-                # Display the multi-select widgets in the first and second columns
-                with col1:
-                    values = st.selectbox('Values',
-                                            ['Opportunity Count', 'Amount (converted)', 'Total Opp Age', 'Qualified Opp Age'],
-                                            index=0)
+            col1, col2, col3 = st.columns(3)
 
-                with col2:
-                    index = st.multiselect('Rows',
-                                           ['Channel', 'Account Group', 'Pod', 'User', 'Industry Alignment', 'New Logo?', 'Deal Size Bucket'],
-                                           ['Channel'])
+            with col1:
+                values = st.selectbox('Values',
+                                        ['Opportunity Count', 'Amount (converted)', 'Total Opp Age', 'Qualified Opp Age'],
+                                        index=0)
 
-                # Display the single-select widget in the third column
-                with col3:
-                    column = st.selectbox('Column',
-                                           ['Close Date - Fiscal Quarter', 'Date: Moved to Discovery - Fiscal Quarter', 'Date: Moved to Validate - Fiscal Quarter'],
-                                           index=0)
+            with col2:
+                index = st.multiselect('Rows',
+                                        ['Channel', 'Account Group', 'Pod', 'User', 'Industry Alignment', 'New Logo?', 'Deal Size Bucket'],
+                                        ['Channel'])
 
-                # Display the second multi-select widget in the fourth column
-                with col4:
-                    if values == 'Opportunity Count':
-                        aggfunc = st.selectbox('Function', ['count'])
-                    else:  # values == 'Amount (converted)'
-                        aggfunc = st.selectbox('Function', ['sum', 'mean', 'median'], index=0)
+            with col3:
+                if values == 'Opportunity Count':
+                    aggfunc = st.selectbox('Function', ['count'])
+                else:  # values == 'Amount (converted)'
+                    aggfunc = st.selectbox('Function', ['sum', 'mean', 'median'], index=0)
 
+            col4, col5 = st.columns([3, 2])
 
+            with col4:
                 start_date, end_date = st.date_input("Select a date range", fiscal_dates())
+
+            with col5:
+                column = st.selectbox('Column',
+                                        ['Close Date - Month', 'Close Date - Fiscal Quarter', 'Close Dte - Fiscal Year', 
+                                         'Date: Moved to Discovery - Month', 'Date: Moved to Discovery - Fiscal Quarter', 'Date: Moved to Discovery - Fiscal Year',
+                                         'Date: Moved to Validate - Month','Date: Moved to Validate - Fiscal Quarter', 'Date: Moved to Validate - Fiscal Year'], 
+                                      index=0)
 
                 if start_date and end_date:
                     st.session_state.start_date = start_date
