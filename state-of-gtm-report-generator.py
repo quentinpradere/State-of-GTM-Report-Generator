@@ -116,8 +116,8 @@ def enhance_salesforce_report(df: pd.DataFrame) -> pd.DataFrame:
     df = update_dates(df, date_cols)
 
     df['Close Date - Month'] = df['Close Date'].dt.strftime('%B')
-    df['Date: Moved to Discovery - Month'] = df['Date: Moved to Discovery].dt.strftime('%B')
-    df['Date: Moved to Validate - Month'] = df['Date: Moved to Validate].dt.strftime('%B')
+    df['Date: Moved to Discovery - Month'] = df['Date: Moved to Discovery'].dt.strftime('%B')
+    df['Date: Moved to Validate - Month'] = df['Date: Moved to Validate'].dt.strftime('%B')
     df['Close Date - Fiscal Quarter'] = df['Close Date'].apply(fiscal_quarter)
     df['Date: Moved to Discovery - Fiscal Quarter'] = df['Date: Moved to Discovery'].apply(fiscal_quarter)
     df['Date: Moved to Validate - Fiscal Quarter'] = df['Date: Moved to Validate'].apply(fiscal_quarter)
