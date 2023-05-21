@@ -391,6 +391,7 @@ def app():
 
                     try:
                         pivot_data = process_data(filtered_data, values, index, column, aggfunc, start_date_pd, end_date_pd)
+                        st.session_state.pivot_data = pivot_data  # Save the pivot data to the session state
 
                         # Create two columns for the buttons
                         col1, col2 = st.columns(2)
@@ -426,8 +427,10 @@ def app():
                     except KeyError as e:
                         st.error(f"Error processing data. It appears the column {str(e)} is not present in your data.")
 
-                    # Display the dataframe after the buttons
-                    st.dataframe(pivot_data)
+        # Place this block after your if-else blocks for 'pivot_section_visible'
+        if st.session_state.get('pivot_section_visible', False) and 'pivot_data' in st.session_state:
+            st.dataframe(st.session_state.pivot_data)
+
 
 if __name__ == "__main__":
     app()
