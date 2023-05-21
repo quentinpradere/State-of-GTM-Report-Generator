@@ -380,7 +380,7 @@ def app():
                                         ['Close Date - Month', 'Close Date - Fiscal Quarter', 'Close Dte - Fiscal Year', 
                                          'Date: Moved to Discovery - Month', 'Date: Moved to Discovery - Fiscal Quarter', 'Date: Moved to Discovery - Fiscal Year',
                                          'Date: Moved to Validate - Month','Date: Moved to Validate - Fiscal Quarter', 'Date: Moved to Validate - Fiscal Year'], 
-                                      index=0)
+                                      index=1)
 
                 if start_date and end_date:
                     st.session_state.start_date = start_date
@@ -422,8 +422,8 @@ def app():
                                     except Exception as e:
                                         st.error(f"Error saving data to Google Sheets: {str(e)}")
 
-                        # Display the dataframe after the buttons
-                        st.dataframe(pivot_data)
+                    # Display the dataframe after the buttons
+                    st.dataframe(pivot_data)
 
                     except KeyError as e:
                         st.error(f"Error processing data. It appears the column {str(e)} is not present in your data.")
