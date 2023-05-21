@@ -389,43 +389,37 @@ def app():
                     start_date_pd = Timestamp(st.session_state.start_date)
                     end_date_pd = Timestamp(st.session_state.end_date)
 
+                    # Process the data and save the pivot data to the session state
                     try:
                         pivot_data = process_data(filtered_data, values, index, column, aggfunc, start_date_pd, end_date_pd)
                         st.session_state.pivot_data = pivot_data  # Save the pivot data to the session state
-
-                        # Create two columns for the buttons
-                        col1, col2 = st.columns(2)
-
-                        # Download button in the first column
-                        with col1:
-                            pivot_csv_data = pivot_data.to_csv().encode('utf-8')
-                            st.download_button(
-                                label="Download Pivot as CSV",
-                                data=pivot_csv_data,
-                                file_name="pivot_table.csv",
-                                mime="text/csv",
-                            )
-
-                        # Save to Google Sheets button in the second column
-                        with col2:
-                            if st.button('Upload Pivot to Google Sheets'):
-                                st.session_state.save_to_gsheet = True
-
-                            if st.session_state.save_to_gsheet:
-                                tab_title = st.text_input('Enter the title for the new tab:', 'State of GTM Pivot')
-                                gsheet_url = st.text_input('Enter the URL of the Google Sheets document:')
-
-                                if gsheet_url and tab_title:
-                                    try:
-                                        append_df_to_gsheet(pivot_data, gsheet_url, tab_title)
-                                        st.success('Data successfully saved to Google Sheets')
-                                        st.session_state.save_to_gsheet = False  # Reset the state after successful save
-                                        st.session_state.go = False  # Reset the go state after successful save
-                                    except Exception as e:
-                                        st.error(f"Error saving data to Google Sheets: {str(e)}")
-
                     except KeyError as e:
                         st.error(f"Error processing data. It appears the column {str(e)} is not present in your data.")
+
+                    # Display the buttons across the page
+                    pivot_csv_data = pivot_data.to_csv().encode('utf-8')
+                    st.download_button(
+                        label="Download Pivot as CSV",
+                        data=pivot_csv_data,
+                        file_name="pivot_table.csv",
+                        mime="text/csv",
+                    )
+
+                    if st.button('Upload Pivot to Google Sheets'):
+                        st.session_state.save_to_gsheet = True
+
+                    if st.session_state.save_to_gsheet:
+                        tab_title = st.text_input('Enter the title for the new tab:', 'State of GTM Pivot')
+                        gsheet_url = st.text_input('Enter the URL of the Google Sheets document:')
+
+                        if gsheet_url and tab_title:
+                            try:
+                                append_df_to_gsheet(pivot_data, gsheet_url, tab_title)
+                                st.success('Data successfully saved to Google Sheets')
+                                st.session_state.save_to_gsheet = False  # Reset the state after successful save
+                                st.session_state.go = False  # Reset the go state after successful save
+                            except Exception as e:
+                                st.error(f"Error saving data to Google Sheets: {str(e)}")
 
         # Place this block after your if-else blocks for 'pivot_section_visible'
         if st.session_state.get('pivot_section_visible', False) and 'pivot_data' in st.session_state:
