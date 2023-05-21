@@ -1,6 +1,6 @@
 # Yext State of GTM App
 
-This Streamlit app is a powerful tool for cleaning, enhancing, and reporting data that you've downloaded from Salesforce. The app is designed to be user-friendly and simple to use.
+This Streamlit app is a tool for cleaning, enhancing, and reporting data that you've downloaded from Salesforce. The app is designed to be user-friendly and simple to use.
 
 ## How to Use the App
 
