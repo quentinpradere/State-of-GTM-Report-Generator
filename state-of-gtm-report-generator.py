@@ -116,8 +116,8 @@ def enhance_salesforce_report(df: pd.DataFrame) -> pd.DataFrame:
     df = update_dates(df, date_cols)
 
     df['Close Date - Month'] = df['Close Date'].dt.strftime('%B')
-    df['Date: Moved to Discovery - Month'] = df['Date: Moved to Discovery - Fiscal Quarter'].dt.strftime('%B')
-    df['Date: Moved to Validate - Month'] = df['Date: Moved to Validate - Fiscal Quarter'].dt.strftime('%B')
+    df['Date: Moved to Discovery - Month'] = df['Date: Moved to Discovery].dt.strftime('%B')
+    df['Date: Moved to Validate - Month'] = df['Date: Moved to Validate].dt.strftime('%B')
     df['Close Date - Fiscal Quarter'] = df['Close Date'].apply(fiscal_quarter)
     df['Date: Moved to Discovery - Fiscal Quarter'] = df['Date: Moved to Discovery'].apply(fiscal_quarter)
     df['Date: Moved to Validate - Fiscal Quarter'] = df['Date: Moved to Validate'].apply(fiscal_quarter)
@@ -308,8 +308,6 @@ def app():
         unique_opportunity_statuses = st.session_state.data['Opportunity Status'].unique().tolist()
         
         default_channels = ['NA Enterprise', 'NA Mid-Market', 'EMEA Northern Enterprise', 'EMEA Central Enterprise', 'EMEA Southern Enterprise', 'EMEA Northern Mid-Market', 'EMEA Reseller']
-
-        default_channels = ['NA Enterprise', 'NA Mid-Market', 'EMEA Northern Enterprise', 'EMEA Central Enterprise', 'EMEA Southern Enterprise', 'EMEA Northern Mid-Market', 'EMEA Reseller']
         selected_channels = st.sidebar.multiselect("Channel", unique_channels, default=default_channels)
         selected_pods = st.sidebar.multiselect("Pod", unique_pods)
         selected_account_types = st.sidebar.multiselect("Account Type", unique_account_types)
@@ -377,7 +375,7 @@ def app():
 
             with col5:
                 column = st.selectbox('Column',
-                                        ['Close Date - Month', 'Close Date - Fiscal Quarter', 'Close Dte - Fiscal Year', 
+                                        ['Close Date - Month', 'Close Date - Fiscal Quarter', 'Close Date - Fiscal Year', 
                                          'Date: Moved to Discovery - Month', 'Date: Moved to Discovery - Fiscal Quarter', 'Date: Moved to Discovery - Fiscal Year',
                                          'Date: Moved to Validate - Month','Date: Moved to Validate - Fiscal Quarter', 'Date: Moved to Validate - Fiscal Year'], 
                                       index=1)
