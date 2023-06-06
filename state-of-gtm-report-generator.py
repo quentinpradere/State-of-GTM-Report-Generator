@@ -136,35 +136,36 @@ def enhance_salesforce_report(df: pd.DataFrame) -> pd.DataFrame:
     df['Channel'] = df['Channel'].replace({'EMEA': 'EMEA Reseller', 'EMEA Southern & Central Enterprise': 'EMEA Southern Enterprise'})   
 
     def update_channel_and_pod(row: pd.Series) -> Tuple[str, str]:
-        """Update channel and pod information.
+    """Update channel and pod information.
 
-        Args:
-            row: Input series.
+    Args:
+        row: Input series.
 
-        Returns:
-            Updated channel and pod.
-        """
-        group_to_channel_dict = {'Southern Europe': 'EMEA Southern Enterprise', 'Central Europe': 'EMEA Central Enterprise', 'Northern Europe': 'EMEA Northern Mid-Market', 'NA Mid-Market': 'NA Mid-Market', 'NA SMB': 'NA SMB', 'GEOs': 'NA Enterprise', 'Verticals': 'NA Enterprise'}
-        
-        if pd.isnull(row['Channel']) or row['Channel'] in ['Do Not Use', 'EMEA']:
-            if 'PAR LC' in row['Opportunity Record Type']:
-                if 'International' in row['Opportunity Record Type']:
-                    return ('INT Reseller', 'EMEA Reseller')
-                else:
-                    return ('NA Reseller', 'NA Enterprise')
-            elif 'Partner' in row['Split Owner Role']:
-                if 'International' in row['Opportunity Record Type']:
-                    return ('INT Reseller', 'EMEA Reseller')
-                else:
-                    return ('NA Reseller', 'NA Enterprise')
-            elif 'Mid-ENT' in row['Split Owner Role'] or 'Mid-Enterprise' in row['Split Owner Role']:
-                return ('Unknown', 'NA Enterprise')
-            elif pd.isna(row['Account Group']) or row['Account Group'] not in group_to_channel_dict:
+    Returns:
+        Updated channel and pod.
+    """
+    group_to_channel_dict = {'Southern Europe': 'EMEA Southern Enterprise', 'Central Europe': 'EMEA Central Enterprise', 'Northern Europe': 'EMEA Northern Mid-Market', 'NA Mid-Market': 'NA Mid-Market', 'NA SMB': 'NA SMB', 'GEOs': 'NA Enterprise', 'Verticals': 'NA Enterprise'}
+    
+    if pd.isnull(row['Channel']) or row['Channel'] in ['Do Not Use', 'EMEA']:
+        if 'PAR LC' in row['Opportunity Record Type']:
+            if 'International' in row['Opportunity Record Type']:
+                return ('INT Reseller', 'EMEA Reseller')
+            else:
+                return ('NA Reseller', 'NA Enterprise')
+        elif 'Partner' in row['Split Owner Role']:
+            if 'International' in row['Opportunity Record Type']:
+                return ('INT Reseller', 'EMEA Reseller')
+            else:
+                return ('NA Reseller', 'NA Enterprise')
+        elif 'Mid-ENT' in row['Split Owner Role'] or 'Mid-Enterprise' in row['Split Owner Role']:
+            return ('Unknown', 'NA Enterprise')
+        else:
+            if pd.isna(row['Account Group']) or row['Account Group'] not in group_to_channel_dict:
                 return ('Unknown', 'Unknown')
             else:
                 return ('Unknown', group_to_channel_dict[row['Account Group']])
-        else:
-            return (row['Pod'], row['Channel'])
+    else:
+        return (row['Pod'], row['Channel'])
         
     df[['Pod', 'Channel']] = df.apply(update_channel_and_pod, axis=1, result_type='expand')
     
